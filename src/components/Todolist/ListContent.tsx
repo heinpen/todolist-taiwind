@@ -7,8 +7,11 @@ import { RootState } from "../../redux/store/store";
 import { sort, updateCheck } from "../../redux/slices/todoSlice";
 import Task from "./Task";
 
+interface ListContentProps {
+    setOpen: ModalProps['setOpen'];
+}
 
-const ListContent = ({setOpen}: ModalProps) => {
+const ListContent = ({setOpen}: ListContentProps) => {
 
     const dispatch = useDispatch();
 

@@ -22,13 +22,13 @@ const Todolist = () => {
                     <Button setOpen={setAddModalOpen}/>
                 </EmptyState> :
                 <>
-                    <ListContent {...{setEditModalOpen}}/>
+                    <ListContent setOpen={setEditModalOpen}/>
                     <div className="flex justify-center mt-6">
-                        <Button setModalOpen={setAddModalOpen}/>
+                        <Button setOpen={setAddModalOpen}/>
                     </div>
                 </>
             }
-            <AddTaskModal open={addModalOpen} setOpen={setAddModalOpen}/>
+            <AddTaskModal isOpen={addModalOpen} setOpen={setAddModalOpen}/>
         </>
     );
 };

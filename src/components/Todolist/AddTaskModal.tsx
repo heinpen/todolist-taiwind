@@ -6,8 +6,7 @@ import { add } from "../../redux/slices/todoSlice";
 import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
 import { ModalProps, TaskState } from "../../types/types";
 
-
-const AddTaskModal = ({open, setOpen}: ModalProps) => {
+const AddTaskModal = ({isOpen, setOpen}: ModalProps) => {
 
     const cancelButtonRef = useRef(null);
     const userData = useRef({priority: 'High', task: ''});
@@ -46,7 +45,7 @@ const AddTaskModal = ({open, setOpen}: ModalProps) => {
     }
 
     return (
-        <Transition.Root show={open} as={Fragment}>
+        <Transition.Root show={isOpen} as={Fragment}>
             <Dialog as="div" className="fixed z-10 inset-0 overflow-y-auto" initialFocus={cancelButtonRef}
                     onClose={setOpen}>
                 <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">

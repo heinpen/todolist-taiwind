@@ -4,3 +4,9 @@ export type TaskState = {
     isDone: boolean;
     priority: string;
 }
+
+
+export interface ModalProps {
+    isOpen: boolean;
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
