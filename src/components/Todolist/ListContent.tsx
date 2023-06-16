@@ -21,8 +21,12 @@ const ListContent = ({setOpen}: ListContentProps) => {
 
     const sortedList = useSelector((state: RootState) => state.todoList.sortedList);
 
-    const handleSort = () => {
-        dispatch(sort());
+    const handlePrioritySort = () => {
+        dispatch(sort('priority'));
+    }
+
+    const handleStatusSort = () => {
+        dispatch(sort('status'));
     }
 
     const list = isSorted ? sortedList : originalList;
@@ -42,7 +46,7 @@ const ListContent = ({setOpen}: ListContentProps) => {
                                 <th
                                     scope="col"
                                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                    onClick={handleSort}
+                                    onClick={handlePrioritySort}
                                 >
                                     Priority
                                 </th>
@@ -55,7 +59,7 @@ const ListContent = ({setOpen}: ListContentProps) => {
                                 <th
                                     scope="col"
                                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                    onClick={handleSort}
+                                    onClick={handleStatusSort}
                                 >
                                     Status
                                 </th>

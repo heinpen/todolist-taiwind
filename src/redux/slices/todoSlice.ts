@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
-import { TaskState } from "../../types/types";
+import { PriorityMapTypes, SortFunctionsTypes, TaskState } from "../../types/types";
 
 
 export interface ListState {
@@ -8,9 +8,19 @@ export interface ListState {
     originalList: TaskState[];
     sortSettings: {
         isSorted: boolean;
-        sortDirection: string;
+        direction: {
+            [key: string]: string;
+        }
     }
 }
+// export interface ListState {
+//     sortedList: TaskState[];
+//     originalList: TaskState[];
+//     sortSettings: {
+//         isSorted: false,
+//         [key: string]: string 
+//     }
+// }
 
 type AddTaskAction = Pick<TaskState, "name" | "priority">;
 
@@ -24,7 +34,10 @@ const initialState: ListState = {
     originalList: todolist ? JSON.parse(todolist) : [],
     sortSettings: {
         isSorted: false,
-        sortDirection: "",
+        direction: {
+            priority: "asc",
+            status: "asc"
+        }
     }
 }
 
@@ -84,30 +97,40 @@ export const todoSLice = createSlice({
             })
         },
 
-        sort: (state) => {
+        sort: (state, action: PayloadAction<string>) => {
 
-            const {originalList} = state;
-            const {sortDirection} = state.sortSettings;
+            const sortType = action.payload;
 
-            const priorityMap = {
+            const {originalList, sortSettings} = state;
+            const direction = sortSettings.direction[sortType];
+    
+            state.sortedList = [...originalList]; // reset sortedList to originalList
+            const priorityMap: PriorityMapTypes = {
                 High: 3,
                 Normal: 2,
                 Low: 1
             };
+        
+            const sortFunctions: SortFunctionsTypes = {
+                status: (a: TaskState) =>
+                direction === 'asc' ? (a.isDone ? 1 : -1) : (a.isDone ? -1 : 1),
+                priority: (a: TaskState, b: TaskState) =>
+                direction === 'asc'
+                    ? priorityMap[a.priority] - priorityMap[b.priority]
+                    : priorityMap[b.priority] - priorityMap[a.priority],
+              };
+            
+            state.sortedList.sort(sortFunctions[sortType]);
 
-            state.sortedList = [...originalList]; // reset sortedList to originalList
-            if (sortDirection === "asc") {
-                state.sortedList.sort((a, b) => priorityMap[a.priority] - priorityMap[b.priority]);
-            } else {
-                state.sortedList.sort((a, b) => priorityMap[b.priority] - priorityMap[a.priority]);
-            }
-
-            state.sortSettings.sortDirection = sortDirection === "asc" ? "desc" : "asc";
+            sortSettings.direction[`${sortType}`] = direction === 'asc' ? 'desc' : 'asc';
             state.sortSettings.isSorted = true;
         }
 
     },
 })
+
+
+
 
 // Action creators are generated for each case reducer function
 export const {add, update, remove, updateCheck, sort} = todoSLice.actions
