@@ -2,38 +2,39 @@ import { ChangeEventHandler, Fragment, useRef, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 
 import { ModalTypes, TaskState } from "../../types/types";
+import { Handlers } from './ModalContainer';
 
 
 export interface ModalProps extends ModalTypes {
-    handleAddTask: () => void;
-    handleTaskInput: ChangeEventHandler<HTMLTextAreaElement>;
     error: boolean;
     cancelButtonRef: any;
-    handleSelectedPriority: ChangeEventHandler<HTMLSelectElement>;
     children: React.ReactNode;
-    buttonName: string;
-    defaultInputValue: string;
-    defaultPriorityValue: string;
+    handlers: Omit<Handlers, "handleDeleteTask">;
+    defaultNames: {
+        buttonName: string;
+        defaultInputValue: string;
+        defaultPriorityValue: string;
+    };
 }
 
 const Modal = (props: ModalProps) => {
 
-    const {handleAddTask, 
-        handleTaskInput, 
-        isOpen, 
-        setOpen, 
+    const {
+        handlers,
+        isOpen,  
         error, 
         cancelButtonRef, 
-        handleSelectedPriority, 
-        buttonName, 
-        defaultInputValue, 
-        defaultPriorityValue, 
-        children} = props;
+        defaultNames,
+        children
+    } = props;
+
+        const {handleAddTask, handleTaskInput, handleSelectedPriority, handleCancel} = handlers;
+        const {buttonName, defaultInputValue, defaultPriorityValue} = defaultNames;
 
     return (
         <Transition.Root show={isOpen} as={Fragment}>
             <Dialog as="div" className="fixed z-10 inset-0 overflow-y-auto" initialFocus={cancelButtonRef}
-                    onClose={setOpen}>
+                    onClose={handleCancel}>
                 <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
                     <Transition.Child
                         as={Fragment}
@@ -127,7 +128,7 @@ const Modal = (props: ModalProps) => {
                                 <div className="flex justify-center">
                                     {children}
                                     <button
-                                        onClick={() => setOpen(false)}
+                                        onClick={handleCancel}
                                         type="button"
                                         className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                     >
