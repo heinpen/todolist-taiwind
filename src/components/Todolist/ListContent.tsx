@@ -79,7 +79,7 @@ const ListContent = ({handleModalOpen}: ListContentProps) => {
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">
                             {list.map((task: TaskState) => (
-                                <Task {...{task, handleModalOpen}} ></Task>
+                                <Task key={task.id} {...{task, handleModalOpen}} ></Task>
                             ))}
                             </tbody>
 
