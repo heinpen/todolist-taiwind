@@ -35,7 +35,6 @@ const ModalContainer = ({isOpen, setOpen, isEditModal, task}: ModalContainerProp
     const taskData = useRef(initialTaskData);
     if(isEditModal && task) taskData.current = {...task};
 
-   
     const defaultNames = {
         defaultPriorityValue: isEditModal && task ? capitalizeFirstLetter(task.priority) : 'High',
         defaultInputValue: isEditModal && task ? task.name : '',
@@ -63,6 +62,7 @@ const ModalContainer = ({isOpen, setOpen, isEditModal, task}: ModalContainerProp
 
             }
             setOpen(false);
+            taskData.current = initialTaskData;
             
         },
         handleSelectedPriority: (e) => {
@@ -70,10 +70,12 @@ const ModalContainer = ({isOpen, setOpen, isEditModal, task}: ModalContainerProp
         },
         handleTaskInput: (e) => {
             taskData.current.name = e.target.value;
-            setError(false);
+            if(error) setError(false);
         },
         handleCancel: () => {
+            taskData.current = initialTaskData;
             setOpen(false);
+            if(error) setError(false);
         },
         handleDeleteTask: () => {
             if(!task) return;
