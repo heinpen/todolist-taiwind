@@ -1,6 +1,8 @@
 # TodoList
 
-![TodoList Demo](demo.gif)
+## Demo
+
+Check out the live demo of the ToDoList application [here](https://649209133c4286236d841525--splendid-pika-87ff29.netlify.app/).
 
 ## Description
 
