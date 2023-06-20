@@ -37,8 +37,8 @@ const ModalContainer = ({isOpen, setOpen, isEditModal, task}: ModalContainerProp
 
    
     const defaultNames = {
-        defaultInputValue: isEditModal && task ? capitalizeFirstLetter(task.priority) : 'High',
-        defaultPriorityValue: isEditModal && task ? task.name : '',
+        defaultPriorityValue: isEditModal && task ? capitalizeFirstLetter(task.priority) : 'High',
+        defaultInputValue: isEditModal && task ? task.name : '',
         buttonName: isEditModal ? 'Edit' : 'Add'
     }
 
