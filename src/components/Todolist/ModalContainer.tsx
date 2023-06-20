@@ -7,6 +7,7 @@ import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
 import { ModalTypes, TaskState } from "../../types/types";
 import Modal, { ModalProps } from './Modal';
 import { AppDispatch } from '../../redux/store/store';
+import { capitalizeFirstLetter } from '../../utils/utils';
 
 interface ModalContainerProps extends ModalTypes {
     isEditModal?: boolean;
@@ -26,6 +27,8 @@ const ModalContainer = ({isOpen, setOpen, isEditModal, task}: ModalContainerProp
 
     const buttonName = isEditModal ? 'Edit' : 'Add';
     const defaultInputValue = isEditModal && task ? task.name : '';
+    const defaultPriorityValue = isEditModal && task ? capitalizeFirstLetter(task.priority) : 'High';
+
     const [error, setError] = useState(false);
 
     const handleTaskInput: ModalProps["handleTaskInput"] = (e) => {
@@ -98,6 +101,7 @@ const ModalContainer = ({isOpen, setOpen, isEditModal, task}: ModalContainerProp
             cancelButtonRef, 
             handleSelectedPriority,
             defaultInputValue,
+            defaultPriorityValue,
             buttonName}}>
             {children}
             </Modal>
