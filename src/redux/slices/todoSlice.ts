@@ -58,7 +58,10 @@ export const todoSLice = createSlice({
             }
         },
         deleteTask: (state, action: PayloadAction<string>) => {
-            state.originalList = state.originalList.filter((item) => item.id !== action.payload)
+            state.originalList = state.originalList.filter((item) => item.id !== action.payload);
+            if (state.sortSettings.isSorted) {
+                state.sortedList = state.sortedList.filter((item) => item.id !== action.payload);
+            }
         },
 
         updateCheck: (state, action: PayloadAction<UpdateCheckAction>) => {
