@@ -1,21 +1,23 @@
 import React, { FC, useRef, useState } from 'react';
-import { updateCheck } from "../../redux/slices/todoSlice";
+import { todoSLiceActions } from '../../redux/slices/todoSlice';
 import { useDispatch } from "react-redux";
 import { TaskState } from "../../types/types";
 import { capitalizeFirstLetter } from "../../utils/utils";
+import { ListContentProps } from './ListContent';
 
-interface TaskProps {
+interface TaskProps extends ListContentProps {
     task: TaskState;
 }
 
-const Task: FC<TaskProps> = ({task}) => {
+const Task: FC<TaskProps> = ({task, handleModalOpen}) => {
 
+    const { updateCheck } = todoSLiceActions;
     const [cellExpanded, setCellExpanded] = useState(false);
     const elementRef = useRef(null);
 
     const dispatch = useDispatch();
 
-    const handleCheckbox = (id: number, isDone: boolean) => {
+    const handleCheckbox = (id: string, isDone: boolean) => {
         dispatch(updateCheck({id, isDone}))
     }
 
@@ -61,9 +63,9 @@ const Task: FC<TaskProps> = ({task}) => {
             </td>
 
             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                <a href="#" className="text-indigo-600 hover:text-indigo-900">
+                <button className="text-indigo-600 hover:text-indigo-900" onClick={() => handleModalOpen(task)}>
                     Edit
-                </a>
+                </button>
             </td>
         </tr>
     );

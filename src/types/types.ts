@@ -1,12 +1,12 @@
 export type TaskState = {
-    id: number;
+    id: string;
     name: string;
     isDone: boolean;
     priority: string;
 }
 
 
-export interface ModalProps {
+export interface ModalTypes {
     isOpen: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }

@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from "react-redux";
 import { TaskState } from "../../types/types";
 import { RootState } from "../../redux/store/store";
 import EmptyState from "./EmptyState";
 import ListContent from "./ListContent";
-import AddTaskModal from "./AddTaskModal";
+import AddTaskModal from "./Modal";
 import Button from "./Button";
+import ModalContainer from './ModalContainer';
 
 const Todolist = () => {
 
@@ -14,6 +15,19 @@ const Todolist = () => {
     const [addModalOpen, setAddModalOpen] = useState(false);
     const [editModalOpen, setEditModalOpen] = useState(false);
 
+    const taskData = {
+        priority: 'High',
+        name: '',
+    }
+
+    const taskToEdit = useRef<TaskState | undefined>();
+
+
+    const handleEditModalOpen = (task: TaskState) => {
+        taskToEdit.current = task;
+      
+        setEditModalOpen(true);
+    }
 
     return (
         <>
@@ -22,13 +36,20 @@ const Todolist = () => {
                     <Button setOpen={setAddModalOpen}/>
                 </EmptyState> :
                 <>
-                    <ListContent setOpen={setEditModalOpen}/>
+                    <ListContent handleModalOpen={handleEditModalOpen}/>
                     <div className="flex justify-center mt-6">
                         <Button setOpen={setAddModalOpen}/>
                     </div>
                 </>
             }
-            <AddTaskModal isOpen={addModalOpen} setOpen={setAddModalOpen}/>
+            <ModalContainer isOpen={addModalOpen} setOpen={setAddModalOpen} {...{taskData}}/>
+            <ModalContainer 
+                isOpen={editModalOpen} 
+                setOpen={setEditModalOpen}
+                isEditModal={true}
+                task={taskToEdit.current}
+                />
+
         </>
     );
 };

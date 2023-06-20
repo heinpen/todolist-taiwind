@@ -2,16 +2,18 @@ import './ListContent.css';
 
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import { ModalProps, TaskState } from "../../types/types";
+import { ModalTypes, TaskState } from "../../types/types";
 import { RootState } from "../../redux/store/store";
-import { sort, updateCheck } from "../../redux/slices/todoSlice";
+import { todoSLiceActions } from "../../redux/slices/todoSlice";
 import Task from "./Task";
 
-interface ListContentProps {
-    setOpen: ModalProps['setOpen'];
+export interface ListContentProps {
+    handleModalOpen: (task: TaskState) => void;
 }
 
-const ListContent = ({setOpen}: ListContentProps) => {
+const ListContent = ({handleModalOpen}: ListContentProps) => {
+
+    const { sort } = todoSLiceActions;
 
     const dispatch = useDispatch();
 
@@ -77,7 +79,7 @@ const ListContent = ({setOpen}: ListContentProps) => {
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">
                             {list.map((task: TaskState) => (
-                                <Task {...{task}}></Task>
+                                <Task {...{task, handleModalOpen}} ></Task>
                             ))}
                             </tbody>
 

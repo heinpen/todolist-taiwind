@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
 import { PlusIcon } from "@heroicons/react/24/solid";
-import { ModalProps } from "../../types/types";
+import { ModalTypes } from "../../types/types";
 
 interface ButtonProps {
-    setOpen: ModalProps["setOpen"];
+    setOpen: ModalTypes["setOpen"];
 }
 
 const Button = ({setOpen}: ButtonProps) => {

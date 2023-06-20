@@ -13,22 +13,15 @@ export interface ListState {
         }
     }
 }
-// export interface ListState {
-//     sortedList: TaskState[];
-//     originalList: TaskState[];
-//     sortSettings: {
-//         isSorted: false,
-//         [key: string]: string 
-//     }
-// }
 
-type AddTaskAction = Pick<TaskState, "name" | "priority">;
+type AddTaskAction = Pick<TaskState, "name" | "priority" | "id">;
+
 
 type UpdateCheckAction = Pick<TaskState, "id" | "isDone">;
 
 
 const todolist = localStorage.getItem("list");
-console.log(todolist);
+
 const initialState: ListState = {
     sortedList: todolist ? JSON.parse(todolist) : [],
     originalList: todolist ? JSON.parse(todolist) : [],
@@ -46,10 +39,10 @@ export const todoSLice = createSlice({
     initialState,
     reducers: {
         add: (state, action: PayloadAction<AddTaskAction>) => {
-            const {name, priority} = action.payload;
+            const {id, name, priority} = action.payload;
 
             state.originalList.push({
-                id: state.originalList.length,
+                id,
                 name,
                 isDone: false,
                 priority,
@@ -57,44 +50,47 @@ export const todoSLice = createSlice({
 
             if (state.sortSettings.isSorted) { // if list is sorted, add to sortedList
                 state.sortedList.push({
-                    id: state.sortedList.length,
+                    id,
                     name,
                     isDone: false,
                     priority,
                 })
             }
         },
-        remove: (state, action: PayloadAction<number>) => {
+        deleteTask: (state, action: PayloadAction<string>) => {
             state.originalList = state.originalList.filter((item) => item.id !== action.payload)
         },
 
         updateCheck: (state, action: PayloadAction<UpdateCheckAction>) => {
             const {id, isDone} = action.payload;
-            state.originalList = state.originalList.map((item) => {
+            const newListCb = (item: TaskState) => {
                 if (item.id === id) {
                     return {...item, isDone}
                 }
                 return item;
-            })
+            }
+            state.originalList = state.originalList.map(newListCb)
 
             if (state.sortSettings.isSorted) {
-                state.sortedList = state.sortedList.map((item) => {
-                    if (item.id === id) {
-                        return {...item, isDone}
-                    }
-                    return item;
-                })
+                state.sortedList = state.sortedList.map(newListCb)
             }
         },
 
-        update: (state, action: PayloadAction<TaskState>) => {
-            const {id, name, isDone, priority} = action.payload;
-            state.originalList = state.originalList.map((item) => {
+        update: (state, action: PayloadAction<AddTaskAction>) => {
+            const {id, name, priority} = action.payload;
+            console.log('asdf', 'newTask')
+       
+            const newListCb = (item: TaskState) => {
                 if (item.id === id) {
-                    return {...item, name, isDone, priority}
+                    return {...item, name, priority}
                 }
                 return item;
-            })
+            }
+            state.originalList = state.originalList.map(newListCb)
+
+            if (state.sortSettings.isSorted) {
+                state.sortedList = state.sortedList.map(newListCb)
+            }
         },
 
         sort: (state, action: PayloadAction<string>) => {
@@ -103,26 +99,29 @@ export const todoSLice = createSlice({
 
             const {originalList, sortSettings} = state;
             const direction = sortSettings.direction[sortType];
-    
+            console.log(direction);
+
             state.sortedList = [...originalList]; // reset sortedList to originalList
             const priorityMap: PriorityMapTypes = {
-                High: 3,
-                Normal: 2,
-                Low: 1
+                high: 3,
+                normal: 2,
+                low: 1
             };
         
             const sortFunctions: SortFunctionsTypes = {
                 status: (a: TaskState) =>
                 direction === 'asc' ? (a.isDone ? 1 : -1) : (a.isDone ? -1 : 1),
-                priority: (a: TaskState, b: TaskState) =>
-                direction === 'asc'
-                    ? priorityMap[a.priority] - priorityMap[b.priority]
-                    : priorityMap[b.priority] - priorityMap[a.priority],
+                priority: (a: TaskState, b: TaskState) => 
+                    direction === 'asc' ? 
+                    priorityMap[a.priority] - priorityMap[b.priority] : 
+                    priorityMap[b.priority] - priorityMap[a.priority]
+                
               };
             
             state.sortedList.sort(sortFunctions[sortType]);
+            console.log(state.sortedList);
 
-            sortSettings.direction[`${sortType}`] = direction === 'asc' ? 'desc' : 'asc';
+            sortSettings.direction[sortType] = direction === 'asc' ? 'desc' : 'asc';
             state.sortSettings.isSorted = true;
         }
 
@@ -133,6 +132,6 @@ export const todoSLice = createSlice({
 
 
 // Action creators are generated for each case reducer function
-export const {add, update, remove, updateCheck, sort} = todoSLice.actions
+export const todoSLiceActions = todoSLice.actions
 
 export default todoSLice.reducer

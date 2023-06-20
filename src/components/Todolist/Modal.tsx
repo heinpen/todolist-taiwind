@@ -1,48 +1,23 @@
 import { ChangeEventHandler, Fragment, useRef, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
-import { CheckIcon } from '@heroicons/react/24/outline'
-import { useDispatch } from "react-redux";
-import { add } from "../../redux/slices/todoSlice";
-import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
-import { ModalProps, TaskState } from "../../types/types";
 
-const AddTaskModal = ({isOpen, setOpen}: ModalProps) => {
+import { ModalTypes, TaskState } from "../../types/types";
 
-    const cancelButtonRef = useRef(null);
-    const userData = useRef({priority: 'High', task: ''});
-    const dispatch = useDispatch()
 
-    const [error, setError] = useState(false);
+export interface ModalProps extends ModalTypes {
+    handleAddTask: () => void;
+    handleTaskInput: ChangeEventHandler<HTMLTextAreaElement>;
+    error: boolean;
+    cancelButtonRef: any;
+    handleSelectedPriority: ChangeEventHandler<HTMLSelectElement>;
+    children: React.ReactNode;
+    buttonName: string;
+    defaultInputValue: string;
+}
 
-    const handleTaskInput: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
-        userData.current.task = e.target.value;
-        setError(false);
-    }
+const Modal = (props: ModalProps) => {
 
-    const getSelectedPriority = (priority: string): TaskState["priority"] => {
-        const selectedValue = priority.toLowerCase();
-        if (selectedValue === "high" || selectedValue === "normal" || selectedValue === "low") {
-            // Valid priority value selected
-            return selectedValue;
-        } else {
-            // Invalid priority value selected
-            return "high";
-        }
-    }
-
-    const handleAddTask = () => {
-        if (userData.current.task === '') setError(true);
-        else {
-
-            if (userData.current.priority === '') userData.current.priority = 'High';
-
-            dispatch(add({
-                priority: getSelectedPriority(userData.current.priority),
-                name: userData.current.task
-            }));
-            setOpen(false);
-        }
-    }
+    const {handleAddTask, handleTaskInput, isOpen, setOpen, error, cancelButtonRef, handleSelectedPriority, buttonName, defaultInputValue, children} = props;
 
     return (
         <Transition.Root show={isOpen} as={Fragment}>
@@ -96,7 +71,7 @@ const AddTaskModal = ({isOpen, setOpen}: ModalProps) => {
                                         <select
                                             id="priority"
                                             name="priority"
-                                            onChange={(e) => userData.current.priority = e.target.value}
+                                            onChange={handleSelectedPriority}
                                             className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                                             defaultValue="High"
                                         >
@@ -121,7 +96,7 @@ const AddTaskModal = ({isOpen, setOpen}: ModalProps) => {
                                                 rows={3}
 
                                                 className={`max-w-lg shadow-sm block w-full focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border ${error ? "border-red-300" : "border-gray-300"} rounded-md`}
-                                                defaultValue={''}
+                                                defaultValue={defaultInputValue}
                                             />
                                             {error ?
                                                 <p className="mt-2 text-sm text-red-600" id="email-error">
@@ -132,10 +107,14 @@ const AddTaskModal = ({isOpen, setOpen}: ModalProps) => {
                                         </div>
                                     </div>
 
+                                    {/*TASK*/}
+                                    
+
                                 </div>
                             </div>
                             <div className="pt-5">
-                                <div className="flex justify-end">
+                                <div className="flex justify-center">
+                                    {children}
                                     <button
                                         onClick={() => setOpen(false)}
                                         type="button"
@@ -145,10 +124,10 @@ const AddTaskModal = ({isOpen, setOpen}: ModalProps) => {
                                     </button>
                                     <button
                                         onClick={handleAddTask}
-                                        type="submit"
+                                        type="button"
                                         className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                     >
-                                        Add
+                                        {buttonName}
                                     </button>
                                 </div>
                             </div>
@@ -160,4 +139,4 @@ const AddTaskModal = ({isOpen, setOpen}: ModalProps) => {
         </Transition.Root>
     )
 }
-export default AddTaskModal;
+export default Modal;
