@@ -119,9 +119,6 @@ const Modal = (props: ModalProps) => {
                                         </div>
                                     </div>
 
-                                    {/*TASK*/}
-                                    
-
                                 </div>
                             </div>
                             <div className="pt-5">
