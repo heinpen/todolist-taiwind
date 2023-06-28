@@ -9,7 +9,7 @@ interface TaskProps extends ListContentProps {
     task: TaskState;
 }
 
-const Task: FC<TaskProps> = ({task, handleModalOpen}) => {
+const Task: FC<TaskProps> = ({task, handleModalOpen, innerRef, ...provided}) => {
 
     const { updateCheck } = todoSLiceActions;
     const [cellExpanded, setCellExpanded] = useState(false);
@@ -26,7 +26,7 @@ const Task: FC<TaskProps> = ({task, handleModalOpen}) => {
     }
 
     return (
-        <tr key={task.id}>
+        <tr {...provided} ref={innerRef}>
             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                 {capitalizeFirstLetter(task.priority)}
             </td>

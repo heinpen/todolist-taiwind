@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, current } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { PriorityMapTypes, SortFunctionsTypes, TaskState } from "../../types/types";
 
@@ -54,6 +54,7 @@ export const todoSLice = createSlice({
                 state.sortedList.push(newTask)
             }
         },
+
         deleteTask: (state, action: PayloadAction<string>) => {
             const filterCheck = (item: TaskState) => item.id !== action.payload;
             state.originalList = state.originalList.filter(filterCheck);
@@ -62,7 +63,17 @@ export const todoSLice = createSlice({
             }
         },
 
+        sortByDrag: (state, action: any) => { // todo improve type
+            const {destination, draggableId} = action.payload;
+            const withoutItem = state.sortedList.filter((item: TaskState) => item.id !== draggableId);
+            const draggedItem = state.sortedList.find((item: TaskState) => item.id === draggableId);
+            if(!draggedItem || !destination) return;
+            state.sortedList = [...withoutItem.slice(0, destination.index), draggedItem , ...withoutItem.slice(destination.index)];
+            state.sortSettings.isSorted = true;
+        },
+
         updateCheck: (state, action: PayloadAction<UpdateCheckAction>) => {
+
             const {id, isDone} = action.payload;
             const newListCb = (item: TaskState) => {
                 if (item.id === id) {
