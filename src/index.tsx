@@ -1,15 +1,12 @@
-import React, { Suspense } from 'react'
 import ReactDOM from 'react-dom/client';
-import { router } from "./AppRouter";
-import { RouterProvider } from "react-router-dom";
-import './index.css'
-import { store } from './redux/store/store'
-import { Provider } from 'react-redux'
+import { Provider } from 'react-redux';
+import { RouterProvider } from 'react-router-dom';
+import { router } from './AppRouter';
+import './index.css';
+import { store } from './redux/store/store';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  
-    <Provider store={store}>
-        <RouterProvider router={router} />
-    </Provider>,
-
-)
+  <Provider store={store}>
+    <RouterProvider router={router} />
+  </Provider>,
+);

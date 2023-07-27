@@ -19,21 +19,26 @@ This project was created as a learning exercise to showcase the use of React, Ty
 
 ## Installation
 
-1. Clone the repository:
+1.  Clone the repository:
 
-   ```bash
-   git clone https://github.com/heinpen/todolist-taiwind.git
-2. Navigate to the project directory:
-   
-   ```bash   
-   cd todo-list
-This command will start the application in development mode. Open your browser and visit http://localhost:3000 to view the TodoList.
+    ```bash
+    git clone https://github.com/heinpen/todolist-taiwind.git
+    ```
 
-3. Build for production:
+2.  Navigate to the project directory:
 
-    ```bash  
-    npm run build
-This command will create an optimized production build of the application in the dist directory.
+    ```bash
+    cd todo-list
+    This command will start the application in development mode. Open your browser and visit http://localhost:3000 to view the TodoList.
+
+    ```
+
+3.  Build for production:
+
+        ```bash
+        npm run build
+
+    This command will create an optimized production build of the application in the dist directory.
 
 ## Technologies Used
 
